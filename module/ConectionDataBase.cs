@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.SQLite;
-
+using System.IO;
 
 namespace alpha
 {
@@ -8,15 +8,15 @@ namespace alpha
     {
         public static void CreatBD()
         {
-
+            
             String PathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             if(!System.IO.Directory.Exists(PathFolder + "\\Alpha"))
             System.IO.Directory.CreateDirectory(PathFolder+"\\Alpha");
             Console.WriteLine(PathFolder);
-            if (SQLiteConnection.Equals(PathFolder + "\\Alpha\\MyDatabase.sqlite", null))
+            if (!File.Exists(PathFolder + "\\Alpha\\MyDatabase.sqlite"))
             {
                 SQLiteConnection.CreateFile(PathFolder + "\\Alpha\\MyDatabase.sqlite");
-                //SQLiteConnection.
+                
 
                 SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + PathFolder + "\\Alpha\\MyDatabase.sqlite");
                 m_dbConnection.Open();
@@ -56,10 +56,9 @@ namespace alpha
                    "id_prod int," +
                   "quan int (10)," +
                   "typeAC varchar(5)," +
-                  "primary key (id_bc)" +
                   "foreign key (id_prod) references prod(id_prod)," +
                   "foreign key (id_bc) references boundc(id_bondc)" +
-                    "primary key(id_bc,id_prod,typeA))";
+                   "primary key(id_bc,id_prod,typeA))";
                 string factach = "create table facteurAch(" +
                     "id_facteurAch INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "id_fournisseur INTEGER," +
@@ -123,7 +122,7 @@ namespace alpha
                 command.ExecuteNonQuery();
                 command = new SQLiteCommand(stock, m_dbConnection);
                 command.ExecuteNonQuery();
-                command = new SQLiteCommand(listBCP, m_dbConnection);
+                command = new SQLiteCommand(listBC, m_dbConnection);
                 command.ExecuteNonQuery();
                 m_dbConnection.Close();
             }
